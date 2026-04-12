@@ -38,7 +38,6 @@ class EventModelForm(forms.ModelForm):
             }),
         }
 
-
         
 
 class CategoryModelForm(forms.ModelForm):

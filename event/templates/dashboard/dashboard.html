@@ -16,6 +16,7 @@
 </div>
 
 
+
 <!-- 🔥 STATS GRID -->
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 m-3">
    <a href="{% url 'dashboard' %}?type=total_events">
@@ -53,27 +54,53 @@
 
 
 
+{% comment %} for messaage show {% endcomment %}
+<div>
+            {% if messages %}
+
+            {% for message  in messages %}
+            <div class="px-2 py-1 {% if message.tags == 'success' %}bg-green-500{% endif %}">{{message}}</div>
+            
+            {% endfor %}
+            
+            {% endif %}
+        </div>
+
+
+
 {% comment %} list of task {% endcomment %}
 
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mt-4">
+{% if mode == 'events' or not mode %}
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 m-3">
 
     {% for event in events %}
 
+    <div class="flex gap-5 p-4 rounded-lg shadow border bg-red-300">
 
-    <div class="p-4 rounded-lg shadow hover:shadow-lg transition duration-300 border bg-red-300">
+        <div>
+            <h2 class="text-xl font-bold text-blue-600 mb-2">
+                {{ event.name }}
+            </h2>
 
-        <h2 class="text-xl font-bold text-blue-600 mb-2">
-            {{ event.name }}
-        </h2>
+            <p class="text-gray-600 mb-2">
+                {{ event.description }}
+            </p>
 
-        <p class="text-gray-600 mb-2">
-            {{ event.description }}
-        </p>
+            <p class="text-sm text-gray-500">
+                {{ event.location }}
+            </p>
+        </div>
 
-        <p class="text-sm text-gray-500">
-            {{ event.location }}
-        </p>
+        <a href="{% url 'update_event' event.id %}">
+            <button class="px-4 py-1 bg-green-500">Edit</button>
+        </a>
+
+        <form action="{% url 'delete_event' event.id %}" method="POST">
+            {% csrf_token %}
+            <button class="px-4 py-1 bg-red-500">Delete</button>
+        </form>
 
     </div>
 
@@ -81,21 +108,67 @@
 
 </div>
 
+{% endif %}
+
+
+{% if mode == 'participants' %}
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 m-3">
+
+    {% for par in participants %}
+
+    <div class="flex gap-5 p-4 rounded-lg shadow border bg-green-300">
+
+        <div>
+            <h2 class="text-xl font-bold text-blue-600 mb-2">
+                {{ par.name }}
+            </h2>
+
+            <p class="text-gray-600 mb-2">
+                {{ par.description }}
+            </p>
+        </div>
+
+        <a href="{% url 'Update_Participents_form' par.id %}">
+            <button class="px-4 py-1 bg-green-600">Edit</button>
+        </a>
+
+        <form action="{% url 'delete_participents' par.id %}" method="POST">
+            {% csrf_token %}
+            <button class="px-4 py-1 bg-red-500">Delete</button>
+        </form>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+
+
 
 <!-- 🔥 TODAY EVENTS -->
-<h2 class="text-xl font-bold mt-6 text-blue-400">Today's Events</h2>
+ <a href="{% url 'dashboard' %}?type=today">
+<h2 class="text-xl font-bold mt-6 text-blue-400 m-3">Today's Events</h2>
+</a>
 
-<div class="mt-4">
 
-    {% for event in events %}
-        <div class="bg-white p-4 shadow mb-2 rounded">
+
+    {% for event in today_events%}
+    <div class="mt-4 m-3">
+        <div class="bg-orange-300 p-4 shadow mb-2 rounded">
             <h3 class="font-bold">{{ event.name }}</h3>
-            <p>{{ events.location }}</p>
+            <p>{{ event.location }}</p>
         </div>
     {% empty %}
         <p class="text-red-500">No events today</p>
     {% endfor %}
 
 </div>
+
+
+ 
 
 {% endblock content %}
