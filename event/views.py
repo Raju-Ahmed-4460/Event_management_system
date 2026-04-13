@@ -197,4 +197,7 @@ def delete_participents(request,id):
     
 
 
+def Home(request):
+    return render(request,'dashboard/Home.html')
+
 
