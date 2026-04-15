@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "event",
     "debug_toolbar",
     "user",
+    "core",
 ]
 
 
