@@ -1,0 +1,52 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=], initial-scale=1.0">
+    <title>Document</title>
+   
+</head>
+<body>
+    <h1>Well come to user authtacation System</h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+    <ul>
+        {% for error in form.non_field_errors %}
+            <li style="color:red;">
+                {{ error }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+        {% for field in form  %}
+        <p>
+            <label for="{{field.id_for_label}}">{{field.label}}</label>
+            {{field}}
+            {% if field.errors %}
+            <ul>
+                
+                    {% for error in field.errors  %}
+                    <li>
+                       {{error}}
+                    </li>
+            
+            
+            {% endfor %}
+               
+
+            </ul>
+            
+            
+            {% endif %}
+        </p>
+        
+        {% endfor %}
+
+        <button type="submit">Sign Up</button>
+    </form>
+</body>
+</html>
