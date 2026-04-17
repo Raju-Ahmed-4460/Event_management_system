@@ -16,30 +16,19 @@ class RegisterForm(UserCreationForm):
 
 
 class CustomRegistrationForm(forms.ModelForm):
-    password1=forms.CharField(widget=forms.PasswordInput)
+    password=forms.CharField(widget=forms.PasswordInput)
     confirm_password=forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
         model=User
-        fields=['username','first_name','last_name','email','password1','confirm_password']
-    def clean_password1(self):
-            password1=self.cleaned_data.get('password1')
-            errors=[]
-            if len(password1) <8:
-                errors.append("Password must be at least 8 character long")
-            if "abc" not in password1:
-                errors.append("Password must cotain uppercase lowercase letter and special character")
-
-            if errors:
-                 raise forms.ValidationError(errors)
-            return password1
+        fields=['username','first_name','last_name','email']
     
     def clean(self): # non field error
          cleaned_data=super().clean()
-         password1=self.cleaned_data.get("password1")
-         confirm_password=self.cleaned_data.get("confirm_password")
+         p1=cleaned_data.get("password")
+         p2=cleaned_data.get("confirm_password")
 
-         if password1 != confirm_password:
+         if p1 and p2 and p1!=p2:
               raise forms.ValidationError("password are not same")
          
          return cleaned_data

@@ -8,6 +8,17 @@
 <body>
     <h1>Welcome to User Authentication System</h1>
 
+     <div>
+            {% if messages %}
+
+            {% for message  in messages %}
+            <div class="px-2 py-1 {% if message.tags == 'error' %}bg-red-500{% endif %}">{{message}}</div>
+            
+            {% endfor %}
+            
+            {% endif %}
+        </div>
+
     <div>
         <form action="" method="POST">
             {% csrf_token %}

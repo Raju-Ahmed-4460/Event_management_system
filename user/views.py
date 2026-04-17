@@ -11,7 +11,9 @@ def sign_up(request):
     if request.method =="POST":
         form=CustomRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user=form.save(commit=False)
+            user.set_password(form.cleaned_data.get('password'))
+            user.save()
             messages.success(request," User Registration sucessfull")
 
     else:
@@ -32,6 +34,8 @@ def user_login(request):
         if user is not None:
             login(request,user)
             return redirect('home1')
+        else:
+            messages.error(request,"Login faild")
 
         
     return render(request,"registration/login.html")
