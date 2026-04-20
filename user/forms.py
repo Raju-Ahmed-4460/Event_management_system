@@ -1,7 +1,8 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.contrib.auth.models import User
 from django import forms
 import re
+
 
 class RegisterForm(UserCreationForm):
     class Meta:
@@ -39,6 +40,13 @@ class CustomRegistrationForm(forms.ModelForm):
          if email_exists:
               raise  forms.ValidationError("Email already exists")
          return email
+
+
+
+class CustomLoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
               
 
 

@@ -33,21 +33,6 @@ class Participant(models.Model):
         return self.name
 
 
-@receiver(m2m_changed, sender=Participant.events.through)
-def notify_participant_for_event(sender, instance, action, pk_set, **kwargs):
 
-    if action == "post_add":
-        all_mail = [instance.email]  
-        all_event=""
-        for e in instance.events.all():
-            all_event+=e.name+" ,"
-        all_event = all_event.rstrip(", ")
-
-        send_mail(
-            "Event message",
-            f"You have been selected for this{all_event}",
-            "rajur20m@gmail.com",
-            all_mail,
-        )
 
    
