@@ -1,0 +1,31 @@
+{% extends "admin/dashboard.html" %}
+
+{% block content %}
+
+
+<div>
+
+    <ul>
+           {% for message in messages %}
+           <li>{{message}}</li>
+
+    {% endfor %}
+
+    </ul>
+ 
+</div>
+
+
+<div>
+    <form method="POST">
+        {% csrf_token %}
+             {{form}}
+             <button type="submit" class="px-2 py-1 bg-yellow-500">Create Group</button>
+
+    </form>
+</div>
+
+
+{% endblock content %}
+
+
