@@ -9,6 +9,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required,user_passes_test,permission_required
+from django.db.models import Prefetch
+
 
 
 ## test is the user is admin
@@ -71,7 +73,16 @@ def Activate_user(request, user_id, token):
 
 @user_passes_test(is_admin,login_url="no_permission")
 def admin_dashboard(request):
-    users=User.objects.all()
+    users=User.objects.prefetch_related(
+        Prefetch('groups',queryset=Group.objects.all(),to_attr='all_groups')
+    ).all()
+
+    for user in users:
+        if user.all_groups:
+            user.group_name=user.all_groups[0].name
+        else:
+            user.group_name="no group name assign"
+
     return render(request,'admin/dashboard.html',{'users':users})
 
 @user_passes_test(is_admin,login_url="no_permission")
@@ -105,7 +116,7 @@ def  create_group(request):
 
 @user_passes_test(is_admin,login_url="no_permission")
 def group_list(request):
-    groups=Group.objects.all()
+    groups=Group.objects.prefetch_related('permissions').all()
 
     return render(request,"admin/grouplist.html",{'groups':groups})
     
