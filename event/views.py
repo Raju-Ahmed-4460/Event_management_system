@@ -4,9 +4,27 @@ from event.form import EventModelForm,CategoryModelForm,ParticipantModelForm
 from event.models import Event,Participant,Category
 from  datetime import date,time
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required,user_passes_test,permission_required
+
+
+# test passes for manger and Employee group
+
+def is_manager(employee):
+    return employee.is_superuser or employee.groups.filter(name='Event_Manager').exists()
+
+
+
+def is_employee(employee):
+    return employee.is_superuser or employee.groups.filter(name='Employee').exists()
+
+
+
+
 
 
 # Create your views here.
+
+@user_passes_test(is_manager,login_url="no_permission")
 def Event_form(request):
     form=EventModelForm()
 
@@ -27,7 +45,7 @@ def Event_form(request):
 
 
 # create category form
-
+@user_passes_test(is_manager,login_url="no_permission")
 def Category_form(request):
     form=CategoryModelForm()
 
@@ -49,6 +67,7 @@ def Category_form(request):
 
 
 # create Participent form
+@login_required
 def Participent_form(request):
     form=ParticipantModelForm()
 
@@ -67,7 +86,7 @@ def Participent_form(request):
 
 
 
-
+@user_passes_test(is_manager,login_url="no_permission")
 def dashboard(request):
     type=request.GET.get('type','all')
     
@@ -128,7 +147,8 @@ def dashboard(request):
 
 
 
-
+@login_required
+@permission_required('tasks.change_event',login_url="no_permission")
 def Update_event_form(request,id):
 
     event=Event.objects.get(id=id)
@@ -147,7 +167,7 @@ def Update_event_form(request,id):
     return render(request,"dashboard/form.html",context)
 
 
-
+@user_passes_test(is_manager,login_url="no_permission")
 def delete_event(request,id):
     if request.method=="POST":
         event=Event.objects.get(id=id)
@@ -162,7 +182,7 @@ def delete_event(request,id):
 
 
 
-
+@user_passes_test(is_employee,login_url="no_permission")
 def Update_Participents_form(request,id):
 
     event=Participant.objects.get(id=id)
@@ -183,7 +203,7 @@ def Update_Participents_form(request,id):
 
 
 
-
+@user_passes_test(is_manager,login_url="no_permission")
 def delete_participents(request,id):
     if request.method=="POST":
         event=Participant.objects.get(id=id)
@@ -196,7 +216,7 @@ def delete_participents(request,id):
 
     
 
-
+@login_required
 def Home(request):
     return render(request,'dashboard/Home.html')
 
