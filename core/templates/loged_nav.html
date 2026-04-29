@@ -1,15 +1,8 @@
 
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static "css/output.css" %}">
-  </head>
-  <body>
-    <header class="bg-white shadow-md">
+
+
+
+<header class="bg-white shadow-md">
       <nav class="container mx-auto px-6 py-3">
         <div class="flex justify-between items-center">
           <a href="index.html" class="text-xl font-bold text-gray-800"
@@ -53,7 +46,7 @@
                   >Dashboard</a
                 >
                 <form method="post" action="{% url "logout" %}">
-                  {% csrf_token %}
+                    {% csrf_token %}
                   <button
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
@@ -101,38 +94,3 @@
         </div>
       </nav>
     </header>
-
-    <main>
-      {% block content %}
-
-      {% include "admin/userlist.html" %}
-      
-      
-      {% endblock content %}
-
-
-
-    </main>
-
-    <script>
-      document
-        .getElementById("menu-toggle")
-        .addEventListener("click", function () {
-          document.getElementById("mobile-menu").classList.toggle("hidden");
-        });
-
-      document
-        .getElementById("user-menu-button")
-        .addEventListener("click", function () {
-          document.getElementById("user-menu").classList.toggle("hidden");
-        });
-
-      // Close the dropdown when clicking outside
-      window.addEventListener("click", function (e) {
-        if (!document.getElementById("user-menu-button").contains(e.target)) {
-          document.getElementById("user-menu").classList.add("hidden");
-        }
-      });
-    </script>
-  </body>
-</html>

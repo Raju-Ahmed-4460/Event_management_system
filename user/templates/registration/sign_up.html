@@ -1,13 +1,9 @@
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=], initial-scale=1.0">
-    <title>Document</title>
-   
-</head>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mx-auto w-1/2 my-9">
 <body>
 
     <h1>Welcome to User Authentication System</h1>
@@ -66,7 +62,10 @@
         
         {% endfor %}
 
-        <button type="submit">Sign Up</button>
+        <button type="submit" class="px-2 py-1 bg-green-500 rounded-md">Sign Up</button>
     </form>
 </body>
-</html>
+
+{% endblock content %}
+
+</div>

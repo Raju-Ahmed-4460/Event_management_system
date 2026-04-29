@@ -29,7 +29,7 @@ def sign_up(request):
             user.save()
 
             messages.success(request,"Check your email")
-            return redirect('login')
+            return redirect('home1')
 
     else:
         form=CustomRegistrationForm()
