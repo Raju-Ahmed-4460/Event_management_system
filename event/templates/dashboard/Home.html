@@ -1,27 +1,9 @@
-{% extends "dashboard/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block content %}
 
 
-<div class="flex fixed w-full flex-col md:flex-row justify-center  items-center p-5  gap-2 md:gap-96 bg-gray-400 ">
-
-
-    <a href="{% url "dashboard" %}">
-
-        <h1 class="text-2xl font-bold mr-10">
-        Dashboard
-    </h1>
-    </a>
-    
-<a href="{% url "home" %}">
-    <h1 class="text-xl">
-        Home
-    </h1>
-</a>
-    
-
-</div>
 
 <div class="flex w-full ">
     <img src="{% static 'image/p1.jpeg' %}" class="w-1/2 h-90 object-cover" alt="">

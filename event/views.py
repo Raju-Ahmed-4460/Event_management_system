@@ -5,17 +5,18 @@ from event.models import Event,Participant,Category
 from  datetime import date,time
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required,user_passes_test,permission_required
+from user.views import is_admin
 
 
 # test passes for manger and Employee group
 
 def is_manager(employee):
-    return employee.is_superuser or employee.groups.filter(name='Event_Manager').exists()
+    return  employee.groups.filter(name='Event_Manager').exists()
 
 
 
 def is_employee(employee):
-    return employee.is_superuser or employee.groups.filter(name='Employee').exists()
+    return  employee.groups.filter(name='Employee').exists()
 
 
 
@@ -219,5 +220,20 @@ def delete_participents(request,id):
 @login_required
 def Home(request):
     return render(request,'dashboard/Home.html')
+
+
+
+@login_required
+def rolebasedDashboard(request):
+    if is_manager(request.user):
+        return redirect('dashboard')
+    elif is_employee(request.user):
+        return redirect('user_dashboard')
+    elif is_admin(request.user):
+        return redirect('admin_dashboard')
+    else:
+        return redirect('no_permission')
+    
+
 
 
