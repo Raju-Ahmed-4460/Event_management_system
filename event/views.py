@@ -19,6 +19,10 @@ def is_employee(employee):
     return  employee.groups.filter(name='Employee').exists()
 
 
+def is_user(user):
+    return user.groups.filter(name="User").exists()
+
+
 
 
 
@@ -68,7 +72,7 @@ def Category_form(request):
 
 
 # create Participent form
-@login_required
+@user_passes_test(is_user,login_url="no_permission")
 def Participent_form(request):
     form=ParticipantModelForm()
 
@@ -77,7 +81,7 @@ def Participent_form(request):
         if form.is_valid():
             form.save()
             messages.success(request,"Participent added sucessfully")
-            return redirect('Participent_form')
+            return redirect('user_dashboard')
         
 
     context={
@@ -230,6 +234,8 @@ def rolebasedDashboard(request):
         return redirect('user_dashboard')
     elif is_admin(request.user):
         return redirect('admin_dashboard')
+    elif is_user(request.user):
+        return redirect('user_dashboard')
     else:
         return redirect('no_permission')
     
