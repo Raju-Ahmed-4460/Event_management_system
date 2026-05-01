@@ -2,6 +2,7 @@
 
 from pathlib import Path
 from decouple import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -87,18 +88,28 @@ WSGI_APPLICATION = "event_management.wsgi.application"
 # }
 
 
-# for postgress sql:
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config("DB_NAME", default=''),
-        'USER': config("DB_USER",default=''),
-        'PASSWORD': config("DB_PASSWORD", default=''),
-        'HOST': config("DB_HOST",default='localhost'),
-        'PORT': config("DB_PORT",cast =int)
-    }
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://event_manager_db_9wyj_user:XDP58jKenK4zBm9QuoIBgIojdkU0cggj@dpg-d7qh646bn58s73c5ju40-a.oregon-postgres.render.com/event_manager_db_9wyj',
+        conn_max_age=600
+    )
 }
+
+
+# for postgress sql:
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config("DB_NAME", default=''),
+#         'USER': config("DB_USER",default=''),
+#         'PASSWORD': config("DB_PASSWORD", default=''),
+#         'HOST': config("DB_HOST",default='localhost'),
+#         'PORT': config("DB_PORT",cast =int)
+#     }
+# }
 
 
 # Password validation
