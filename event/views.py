@@ -34,7 +34,7 @@ def Event_form(request):
         if form.is_valid():
             form.save()
             messages.success(request,"Event added sucessfully")
-            return redirect('Event_form')
+            return redirect('roleBasedDashboard')
 
     context={
         "form":form
@@ -55,7 +55,7 @@ def Category_form(request):
         if form.is_valid():
             form.save()
             messages.success(request,"Category added sucessfully")
-            return redirect('Category_form')
+            return redirect('roleBasedDashboard')
 
     context={
         "form":form
@@ -148,8 +148,7 @@ def dashboard(request):
 
 
 
-@login_required
-@permission_required('tasks.change_event',login_url="no_permission")
+@user_passes_test(is_manager,login_url="no_permission")
 def Update_event_form(request,id):
 
     event=Event.objects.get(id=id)
@@ -183,7 +182,7 @@ def delete_event(request,id):
 
 
 
-@user_passes_test(is_employee,login_url="no_permission")
+@user_passes_test(is_manager,login_url="no_permission")
 def Update_Participents_form(request,id):
 
     event=Participant.objects.get(id=id)
