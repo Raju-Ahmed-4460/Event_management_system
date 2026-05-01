@@ -1,38 +1,47 @@
-from django.db.models.signals import post_save,post_delete,pre_save,m2m_changed
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
-from django.contrib.auth.models import User,Group
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
-from django.core.mail import send_mail
+from threading import Thread
 
 
+def send_activation_email_task(user):
+    token = default_token_generator.make_token(user)
+    activation_url = f"{settings.FRONTEND_URL}/user/activate/{user.id}/{token}/"
 
-@receiver(post_save,sender=User)
+    subject = "Activate your account"
+    message = f"""
+Hi {user.username},
 
-def send_activation_email(sender,instance,created,**kwargs):
+Activate your account by clicking below:
+{activation_url}
+
+Thank you
+"""
+
+    try:
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [user.email],
+            fail_silently=False
+        )
+    except Exception as e:
+        print(f"Failed to send mail {user.email}: {str(e)}")
+
+
+@receiver(post_save, sender=User)
+def send_activation_email(sender, instance, created, **kwargs):
     if created:
-        token=default_token_generator.make_token(instance)
-        activation_urls=f"{settings.FRONTEND_URL}/user/activate/{instance.id}/{token}/"
-
-        subject='active your account'
-        message=f"Hi {instance.username},\n\n activate your account by clicking the link below\n{activation_urls}\n\n Thank You"
-        recipent_list=[instance.email]
-        try:
-            send_mail(subject,message,settings.EMAIL_HOST_USER,recipent_list)
-        except Exception as e:
-            print(f"failed to send mail {instance.email}:{str(e)}")
+        # ✅ run email in background (fix slow signup)
+        Thread(target=send_activation_email_task, args=(instance,)).start()
 
 
-
-
-@receiver(post_save,sender=User)
-def assign_role(sender,created,instance,**kwargs):
+@receiver(post_save, sender=User)
+def assign_role(sender, instance, created, **kwargs):
     if created:
-        user_group,created=Group.objects.get_or_create(name='User')
+        user_group, _ = Group.objects.get_or_create(name='User')
         instance.groups.add(user_group)
-        instance.save()
-
-
-
-        
