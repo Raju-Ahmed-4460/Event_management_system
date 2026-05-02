@@ -36,7 +36,7 @@ Thank you
 @receiver(post_save, sender=User)
 def send_activation_email(sender, instance, created, **kwargs):
     if created:
-        # ✅ run email in background (fix slow signup)
+
         Thread(target=send_activation_email_task, args=(instance,)).start()
 
 
