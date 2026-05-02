@@ -165,6 +165,6 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
 # hyzd moll ggnr ztad
 
-FRONTEND_URL="http://127.0.0.1:8000"
+FRONTEND_URL="https://event-management-system-xdnl.onrender.com"
 
 LOGIN_URL="login"
