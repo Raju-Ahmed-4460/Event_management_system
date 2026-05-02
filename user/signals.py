@@ -1,47 +1,35 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.core.mail import send_mail
-from django.contrib.auth.models import User, Group
-from django.contrib.auth.tokens import default_token_generator
-from django.conf import settings
+from event.models import Participant, Event
 from threading import Thread
 
 
-def send_activation_email_task(user):
-    token = default_token_generator.make_token(user)
-    activation_url = f"{settings.FRONTEND_URL}/user/activate/{user.id}/{token}/"
-
-    subject = "Activate your account"
-    message = f"""
-Hi {user.username},
-
-Activate your account by clicking below:
-{activation_url}
-
-Thank you
-"""
-
+def send_event_email(email, subject, message):
     try:
         send_mail(
             subject,
             message,
-            settings.EMAIL_HOST_USER,
-            [user.email],
-            fail_silently=False
+            "rajur20m@gmail.com",
+            [email],
+            fail_silently=True
         )
     except Exception as e:
-        print(f"Failed to send mail {user.email}: {str(e)}")
+        print("Email error:", e)
 
 
-@receiver(post_save, sender=User)
-def send_activation_email(sender, instance, created, **kwargs):
-    if created:
+@receiver(m2m_changed, sender=Participant.events.through)
+def notify_participant_for_event(sender, instance, action, pk_set, **kwargs):
 
-        Thread(target=send_activation_email_task, args=(instance,)).start()
+    if action == "post_add":
 
+        event_names = Event.objects.filter(id__in=pk_set).values_list("name", flat=True)
+        all_event = ", ".join(event_names)
 
-@receiver(post_save, sender=User)
-def assign_role(sender, instance, created, **kwargs):
-    if created:
-        user_group, _ = Group.objects.get_or_create(name='User')
-        instance.groups.add(user_group)
+        subject = "Event Message"
+        message = f"You have been selected for: {all_event}"
+
+        Thread(
+            target=send_event_email,
+            args=(instance.email, subject, message)
+        ).start()
