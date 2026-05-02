@@ -88,7 +88,6 @@ WSGI_APPLICATION = "event_management.wsgi.application"
 # }
 
 
-
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
@@ -165,6 +164,6 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
 # hyzd moll ggnr ztad
 
-FRONTEND_URL="https://event-management-system-xdnl.onrender.com"
+FRONTEND_URL="http://127.0.0.1:8000"
 
 LOGIN_URL="login"
