@@ -1,0 +1,137 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{event.name}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+      <h1 class="text-3xl font-bold mb-6">{{event.name}}</h1>
+
+      <!-- Navigation Tabs -->
+      <div class="flex gap-4 mb-8 border-b">
+        <button
+          class="px-4 py-2 bg-blue-50 text-blue-600 rounded-t-lg flex items-center gap-2"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+            ></path>
+          </svg>
+          {{event.name}} Details
+        </button>
+        
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2">
+          <div class="bg-white p-6 rounded-lg shadow-sm">
+            <!-- Status Tags -->
+          
+
+            <!-- Creation Date -->
+            <div class="text-gray-600 mb-6">Date:{{event.date}}</div>
+             <div class="text-gray-600 mb-6">Time:{{event.time}}</div>
+
+           <div class="text-gray-600 mb-3 text-lg">
+    📅 Date: <span class="font-medium">{{ event.date }}</span>
+</div>
+
+<div class="text-gray-600 mb-6 text-lg">
+    ⏰ Time: <span class="font-medium">{{ event.time }}</span>
+</div>
+
+<div class="mb-9">
+    <h2 class="text-2xl font-bold mb-4 border-b pb-2">
+        Event Details
+    </h2>
+
+    <div class="text-lg font-semibold mb-2">
+        Event Name:
+        <span class="font-normal text-gray-700">{{ event.name }}</span>
+    </div>
+
+    <div class="text-lg font-semibold mb-2">
+        Event Location:
+        <span class="font-normal text-gray-700">{{ event.location }}</span>
+    </div>
+
+    <div class="text-lg font-semibold mb-4">
+        Event Category:
+        <span class="font-normal text-gray-700">{{ event.category }}</span>
+    </div>
+
+    <div class="text-lg font-semibold">
+        Event Participants:
+    </div>
+
+    {% if participents %}
+        <div class="mt-2 space-y-2">
+            {% for par in participents %}
+                <div class="bg-gray-100 p-2 rounded">
+                    <p class="font-medium">{{ par.name }}</p>
+                    <p class="text-sm text-gray-600">{{ par.email }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-gray-500 mt-2">No participants</p>
+    {% endif %}
+</div>
+            
+            <div>
+              <button
+                class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                type="submit"
+              >
+                Delete Task
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+          <!-- Task Description -->
+          <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
+            <h2 class="text-xl font-bold mb-4">Event DESCRIPTION</h2>
+            <p class="text-gray-600">
+              {{event.description}}
+            </p>
+          </div>
+
+          <!-- Assets -->
+          <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h2 class="text-xl font-bold mb-4">ASSETS</h2>
+            <div class="space-y-4">
+              {% if event.asset %}
+  <img
+    src="{{ event.asset.url }}"
+    alt="Event Image"
+    class="w-full rounded-lg"
+  />
+{% else %}
+  <div class="w-full h-48 flex items-center justify-center bg-gray-100 rounded-lg text-gray-500">
+    No image available
+  </div>
+{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -34,7 +34,7 @@ def Event_form(request):
     form=EventModelForm()
 
     if request.method=="POST":
-        form=EventModelForm(request.POST)
+        form=EventModelForm(request.POST,request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request,"Event added sucessfully")
@@ -238,6 +238,14 @@ def rolebasedDashboard(request):
         return redirect('user_dashboard')
     else:
         return redirect('no_permission')
+    
+
+
+
+def events_detail(request,user_id):
+    event=Event.objects.get(id=user_id)
+    participents=event.participants.all()
+    return render(request,'event_detail.html',{'event':event,'participents':participents})
     
 
 

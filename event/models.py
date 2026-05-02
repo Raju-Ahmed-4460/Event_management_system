@@ -18,6 +18,8 @@ class Event(models.Model):
     date=models.DateField()
     time=models.TimeField()
     location=models.CharField(max_length=200)
+    asset=models.ImageField(upload_to='event_asset',blank=True, null=True)
+
     category=models.ForeignKey(Category,on_delete=models.CASCADE,related_name="events")
 
     def __str__(self):
