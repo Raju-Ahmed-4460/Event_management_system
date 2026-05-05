@@ -243,7 +243,7 @@ def rolebasedDashboard(request):
 
 
 def events_detail(request,user_id):
-    event=Event.objects.get(id=user_id)
+    event=Event.objects.prefetch_related('participants').get(id=user_id)
     participents=event.participants.all()
     return render(request,'event_detail.html',{'event':event,'participents':participents})
     
