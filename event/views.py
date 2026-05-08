@@ -77,7 +77,7 @@ def Participent_form(request):
     form=ParticipantModelForm()
 
     if request.method=="POST":
-        form=ParticipantModelForm(request.POST)
+        form=ParticipantModelForm(request.POST,request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request,"Participent added sucessfully")
@@ -159,7 +159,7 @@ def Update_event_form(request,id):
     form=EventModelForm(instance=event)
 
     if request.method=="POST":
-        form=EventModelForm(request.POST,instance=event)
+        form=EventModelForm(request.POST,request.FILES,instance=event)
         if form.is_valid():
             form.save()
             messages.success(request,"Event Update sucessfully")
@@ -193,7 +193,7 @@ def Update_Participents_form(request,id):
     form=ParticipantModelForm(instance=event)
 
     if request.method=="POST":
-        form=ParticipantModelForm(request.POST,instance=event)
+        form=ParticipantModelForm(request.POST,request.FILES,instance=event)
         if form.is_valid():
             form.save()
             messages.success(request,"Participents Update sucessfully")
@@ -246,6 +246,11 @@ def events_detail(request,user_id):
     event=Event.objects.prefetch_related('participants').get(id=user_id)
     participents=event.participants.all()
     return render(request,'event_detail.html',{'event':event,'participents':participents})
+
+def user_details(request,user_id):
+    par=Participant.objects.prefetch_related('events').get(id=user_id)
+    return render(request,'user_detail.html',{'par':par})
+
     
 
 

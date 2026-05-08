@@ -29,6 +29,7 @@ class Event(models.Model):
 class Participant(models.Model):
     name=models.CharField(max_length=100)
     email=models.EmailField()
+    asset=models.ImageField(upload_to='participant_asset',blank=True,null=True)
     events=models.ManyToManyField(Event,related_name='participants')
 
     def __str__(self):

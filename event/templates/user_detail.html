@@ -12,7 +12,7 @@
     <div class="container mx-auto px-4 py-8 max-w-7xl">
 
       <div class="flex justify-between">
-        <div class="text-3xl font-bold mb-6">{{event.name}}</div>
+        <div class="text-3xl font-bold mb-6">{{par.name}}</div>
         <a href="{% url "roleBasedDashboard" %}" class="text-3xl font-bold mb-6">Dashboard</a>
 
       </div>
@@ -36,7 +36,7 @@
               d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
             ></path>
           </svg>
-          {{event.name}} Details
+          {{par.name}} Details
         </button>
         
       </div>
@@ -45,8 +45,19 @@
         <!-- Main Content -->
         <div class="lg:col-span-2">
           <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h1>Participents Events</h1>
             <!-- Status Tags -->
 
+            {% if par.events %}
+
+            {% for event in par.events.all %}
+          
+
+            <!-- Creation Date -->
+           
+       <div class="text-gray-600 mb-3 text-lg">
+    Name: <span class="font-medium">{{ event.name }}</span>
+</div>
            <div class="text-gray-600 mb-3 text-lg">
     📅 Date: <span class="font-medium">{{ event.date }}</span>
 </div>
@@ -55,38 +66,26 @@
     ⏰ Time: <span class="font-medium">{{ event.time }}</span>
 </div>
 
+{% endfor %}
+{% else %}
+<div>No events</div>
+
+{% endif %}
+
 <div class="mb-9">
-    <h2 class="text-2xl font-bold mb-4 border-b pb-2">
-        Event Details
-    </h2>
-
-    <div class="text-lg font-semibold mb-2">
-        Event Name:
-        <span class="font-normal text-gray-700">{{ event.name }}</span>
-    </div>
-
-    <div class="text-lg font-semibold mb-2">
-        Event Location:
-        <span class="font-normal text-gray-700">{{ event.location }}</span>
-    </div>
-
-    <div class="text-lg font-semibold mb-4">
-        Event Category:
-        <span class="font-normal text-gray-700">{{ event.category }}</span>
-    </div>
-
+   
     <div class="text-lg font-semibold">
-        Event Participants:
+     Participants Details:
     </div>
 
-    {% if participents %}
+    {% if par %}
         <div class="mt-2 space-y-2">
-            {% for par in participents %}
+           
                 <div class="bg-gray-100 p-2 rounded">
                     <p class="font-medium">{{ par.name }}</p>
                     <p class="text-sm text-gray-600">{{ par.email }}</p>
                 </div>
-            {% endfor %}
+            
         </div>
     {% else %}
         <p class="text-gray-500 mt-2">No participants</p>
@@ -95,7 +94,7 @@
             
             <div class=" flex flex-row gap-3">
 
-              <form action="{% url "delete_event" event.id %}" method="POST">
+               <form action="{% url "delete_participents" par.id %}" method="POST">
                 {% csrf_token %}
                 <button
                 class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
@@ -104,12 +103,12 @@
                 Delete Task
               </button>
 
-              </form>
+              </form> 
 
-                <a href="{% url 'update_event' event.id %}"
+              <a href="{% url 'Update_Participents_form' par.id %}"
                class="px-4 py-1 bg-green-500 text-white rounded">
                 Edit
-            </a>
+            </a> 
               
             </div>
           </div>
@@ -117,21 +116,15 @@
 
         <!-- Sidebar -->
         <div class="lg:col-span-1">
-          <!-- Task Description -->
-          <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
-            <h2 class="text-xl font-bold mb-4">Event DESCRIPTION</h2>
-            <p class="text-gray-600">
-              {{event.description}}
-            </p>
-          </div>
+         
 
           <!-- Assets -->
           <div class="bg-white p-6 rounded-lg shadow-sm">
             <h2 class="text-xl font-bold mb-4">ASSETS</h2>
             <div class="space-y-4">
-              {% if event.asset %}
+              {% if par.asset %}
   <img
-    src="{{ event.asset.url }}"
+    src="{{ par.asset.url }}"
     alt="Event Image"
     class="w-full rounded-lg"
   />
