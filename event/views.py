@@ -6,6 +6,21 @@ from  datetime import date,time
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required,user_passes_test,permission_required
 from user.views import is_admin
+from django.http import HttpResponse
+from django.views import View
+
+
+#Class Base view example
+
+class Greatting(View):
+    gretting ="Hello Everyone"
+
+    def get(self, request):
+        return HttpResponse(self.gretting)
+
+
+class HiGreatting(Greatting):
+    gretting ="Hello Raju"
 
 
 # test passes for manger and Employee group
