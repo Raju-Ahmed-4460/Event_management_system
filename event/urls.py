@@ -2,7 +2,7 @@ from django.urls import path
 from event.views import Event_form,HiGreatting,Category_form,Participent_form,dashboard,Update_event_form,delete_event,Update_Participents_form,delete_participents,Home,rolebasedDashboard,events_detail,user_details,Greatting
 
 urlpatterns = [
-    path("create_event/",Event_form,name='Event_form'),
+    path("create_event/",Event_form.as_view(),name='Event_form'),
     path("create_category/",Category_form,name="Category_form"),
     path("participent_create/",Participent_form,name='Participent_form'),
     path("dashboard/",dashboard,name="dashboard"),

@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required,user_passes_test,permi
 from user.views import is_admin
 from django.http import HttpResponse
 from django.views import View
+from django.utils.decorators import method_decorator
 
 
 #Class Base view example
@@ -44,21 +45,33 @@ def is_user(user):
 
 # Create your views here.
 
-@user_passes_test(is_manager,login_url="no_permission")
-def Event_form(request):
-    form=EventModelForm()
+@method_decorator(user_passes_test(is_manager,login_url="no_permission"),name="dispatch")
+class Event_form(View):
 
-    if request.method=="POST":
-        form=EventModelForm(request.POST,request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request,"Event added sucessfully")
-            return redirect('roleBasedDashboard')
 
-    context={
-        "form":form
-    }
-    return render(request,"dashboard/form.html",context)
+    def get(self,request,*args,**kwargs):
+       form=EventModelForm()
+       context={
+               "form":form
+           }
+       return render(request,"dashboard/form.html",context)
+
+    def post(self,request,*args,**kwargs):
+                form=EventModelForm(request.POST,request.FILES)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request,"Event added sucessfully")
+                    return redirect('roleBasedDashboard')
+                else:
+                    context={
+                                   "form":form
+                               }
+                    return render(request,"dashboard/form.html",context)
+
+
+    
+
+    
 
 
 

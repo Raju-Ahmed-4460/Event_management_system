@@ -16,7 +16,7 @@ from django.db.models import Prefetch
 ## test is the user is admin
 
 def is_admin(user):
-    return user.groups.filter(name='admin').exists()
+    return user.is_superuser or user.groups.filter(name='admin').exists()
 
 
 def sign_up(request):
