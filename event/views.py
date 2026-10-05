@@ -9,6 +9,9 @@ from user.views import is_admin
 from django.http import HttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.views.generic.base import ContextMixin
 
 
 #Class Base view example
@@ -45,15 +48,20 @@ def is_user(user):
 
 # Create your views here.
 
-@method_decorator(user_passes_test(is_manager,login_url="no_permission"),name="dispatch")
-class Event_form(View):
+class Event_form(LoginRequiredMixin,PermissionRequiredMixin,ContextMixin,View):
+    permission_required = "event.add_event"
+    def handle_no_permission(self):
+        return redirect("no_permission")
+    def get_context_data(self, **kwargs):
+        context= super().get_context_data(**kwargs)
+        context['form']=kwargs.get('event_form',EventModelForm())
+        return context
+    
 
 
     def get(self,request,*args,**kwargs):
-       form=EventModelForm()
-       context={
-               "form":form
-           }
+       
+       context=self.get_context_data()
        return render(request,"dashboard/form.html",context)
 
     def post(self,request,*args,**kwargs):
@@ -63,9 +71,7 @@ class Event_form(View):
                     messages.success(request,"Event added sucessfully")
                     return redirect('roleBasedDashboard')
                 else:
-                    context={
-                                   "form":form
-                               }
+                    context=self.get_context_data(event_form=form)
                     return render(request,"dashboard/form.html",context)
 
 
