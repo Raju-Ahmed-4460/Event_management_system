@@ -84,21 +84,36 @@ class Event_form(LoginRequiredMixin,PermissionRequiredMixin,ContextMixin,View):
 
 
 # create category form
-@user_passes_test(is_manager,login_url="no_permission")
-def Category_form(request):
-    form=CategoryModelForm()
+class Category_form(LoginRequiredMixin,PermissionRequiredMixin,ContextMixin,View):
+    permission_required="event.add_category"
 
-    if request.method=="POST":
-        form=CategoryModelForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request,"Category added sucessfully")
-            return redirect('roleBasedDashboard')
+    def handle_no_permission(self):
+            return redirect("no_permission")
 
-    context={
-        "form":form
-    }
-    return render(request,"dashboard/form.html",context)
+    def get_context_data(self, **kwargs):
+        context= super().get_context_data(**kwargs)
+        context["form"]=kwargs.get('form',CategoryModelForm())
+        return context
+
+    def get(self,request,*args, **kwargs):
+        
+        context=self.get_context_data()
+        return render(request,"dashboard/form.html",context)
+    def post(self,request,*args, **kwargs):
+                form=CategoryModelForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request,"Category added sucessfully")
+                    return redirect('roleBasedDashboard')
+                else:
+                  context=self.get_context_data(form=form)
+                  return render(request,"dashboard/form.html",context)
+
+    
+
+    
+
+    
 
 
 
@@ -106,22 +121,42 @@ def Category_form(request):
 
 
 # create Participent form
-@user_passes_test(is_user,login_url="no_permission")
-def Participent_form(request):
-    form=ParticipantModelForm()
 
-    if request.method=="POST":
-        form=ParticipantModelForm(request.POST,request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request,"Participent added sucessfully")
-            return redirect('user_dashboard')
+class Participent_form(LoginRequiredMixin,PermissionRequiredMixin,ContextMixin,View):
+
+
+    permission_required="event.add_participant"
+
+    def handle_no_permission(self):
+        return redirect("no_permission")
+
+
+    def get_context_data(self, **kwargs):
+        context= super().get_context_data(**kwargs)
+        context["form"]=kwargs.get("form",ParticipantModelForm())
+        return context
+
+    def get(self,request,*args, **kwargs):  
+        context=self.get_context_data()
+        return render(request,"dashboard/form.html",context)
+
+    
+    def post(self,request,*args, **kwargs):
+                form=ParticipantModelForm(request.POST,request.FILES)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request,"Participent added sucessfully")
+                    return redirect('user_dashboard')
+                else:
+                    context=self.get_context_data(form=form)
+                    return render(request,"dashboard/form.html",context)
+
+
+    
+
         
 
-    context={
-        "form":form
-    }
-    return render(request,"dashboard/form.html",context)
+    
 
 
 

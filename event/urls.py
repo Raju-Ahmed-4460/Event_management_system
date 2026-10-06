@@ -3,8 +3,8 @@ from event.views import Event_form,HiGreatting,Category_form,Participent_form,da
 
 urlpatterns = [
     path("create_event/",Event_form.as_view(),name='Event_form'),
-    path("create_category/",Category_form,name="Category_form"),
-    path("participent_create/",Participent_form,name='Participent_form'),
+    path("create_category/",Category_form.as_view(),name="Category_form"),
+    path("participent_create/",Participent_form.as_view(),name='Participent_form'),
     path("dashboard/",dashboard,name="dashboard"),
     path("upadte_event/<int:id>/",Update_event_form,name='update_event'),
     path("delete_event/<int:id>/",delete_event,name='delete_event'),
